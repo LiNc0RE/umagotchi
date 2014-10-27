@@ -105,7 +105,7 @@ class EventManager {
 		this.events.clear ();
 		for (IEvent event : buffer) {
 			boolean consumed = this.handle (event);
-			if (consumed) {
+			if (! consumed) {
 				this.raise (event);
 			}
 		}

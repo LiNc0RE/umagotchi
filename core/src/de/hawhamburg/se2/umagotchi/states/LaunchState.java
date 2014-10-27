@@ -42,10 +42,11 @@ class LaunchState
 	public
 	void onUpdate (float deltaTime) {
 		if (! this.ready) {
-			this.font = new BitmapFont ();		
+			this.font = new BitmapFont ();
 			this.game.getAssetManager ().load ("stall.png", Texture.class);
-			this.game.getAssetManager ().load ("pferd.png", Texture.class);
+			this.game.getAssetManager ().load ("horse.png", Texture.class);
 			this.game.getAssetManager ().load ("comb2.png", Texture.class);
+			this.game.getAssetManager ().load ("hay.png", Texture.class);
 			
 			this.ready = true;
 			

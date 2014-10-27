@@ -91,6 +91,7 @@ implements
 	@Override
 	public
 	void resize (int width, int height) {
+		Gdx.app.debug ("UmagotchiGame", "Resizing to (" + width + ":" + height + ")");
 		this.camera.setToOrtho (false, width, height);
 	}
 

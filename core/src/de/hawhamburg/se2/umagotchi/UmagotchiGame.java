@@ -128,6 +128,8 @@ implements
 	@Override
 	public
 	boolean handle (IEvent event) {
+		boolean consumend = false;
+
 		if (event.getClass ().equals (RequestStateChangeEvent.class)) {
 			RequestStateChangeEvent re = (RequestStateChangeEvent) event;
 			
@@ -150,9 +152,12 @@ implements
 				Gdx.app.error ("UmagotchiGame", "Well access has not been granted, i guess.");
 				e.printStackTrace();
 			}
+			finally {
+				consumend = true;
+			}
 		}
 		
-		return false;
+		return consumend;
 	}
 
 }

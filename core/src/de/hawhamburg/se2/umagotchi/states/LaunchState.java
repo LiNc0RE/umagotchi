@@ -1,11 +1,12 @@
 package de.hawhamburg.se2.umagotchi.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 
 import de.hawhamburg.se2.umagotchi.UmagotchiGame;
 import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
@@ -48,6 +49,12 @@ class LaunchState
 			this.game.getAssetManager ().load ("comb2.png", Texture.class);
 			this.game.getAssetManager ().load ("hay.png", Texture.class);
 			
+			this.game.getAssetManager ().load ("neighing-01.mp3", Sound.class);
+			this.game.getAssetManager ().load ("neighing-02.mp3", Sound.class);
+			this.game.getAssetManager ().load ("chewing.mp3", Sound.class);
+			this.game.getAssetManager ().load ("interface-click.mp3", Sound.class);
+			this.game.getAssetManager ().load ("bg-music.mp3", Music.class);
+			
 			this.ready = true;
 			
 			return;
@@ -55,13 +62,18 @@ class LaunchState
 		
 		boolean finished = this.game.getAssetManager ().update (); 
 		if (finished) {
+			Music bg = this.game.getAssetManager ().get ("bg-music.mp3", Music.class);
+			bg.setLooping (true);
+			bg.setVolume (0.31415f);
+			bg.play ();
+			
 			this.game.getEventManager ().raise (
 				new RequestStateChangeEvent (MainMenuState.class, true)
 			);
 		}
 		else {
 			this.precentage = String.valueOf (
-				this.game.getAssetManager ().getProgress ()
+				(int)(this.game.getAssetManager ().getProgress () * 100)
 			);
 		}
 	}

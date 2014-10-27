@@ -1,7 +1,7 @@
 package de.hawhamburg.se2.umagotchi.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -119,9 +119,15 @@ implements
 	@Override
 	public boolean handle (IEvent event) {
 		Class type = event.getClass ();
+		
 		if (type.equals (TouchDownEvent.class)) {
 			TouchDownEvent e = (TouchDownEvent) event;
 			Gdx.app.debug ("BarnState", "Position (" + e.screenX + ":" + e.screenY + ")");
+		
+			Sound click = this.game.getAssetManager ().get ("interface-click.mp3", Sound.class);
+			click.play ();
+			
+			return true;
 		}
 		
 		return false;

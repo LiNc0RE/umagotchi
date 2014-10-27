@@ -1,6 +1,7 @@
 package de.hawhamburg.se2.umagotchi.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,9 +20,13 @@ class MainMenuState
 	private
 	BitmapFont font;
 	
+	private
+	boolean init;
+	
 	public
 	MainMenuState () {
 		this.font = new BitmapFont ();
+		this.init = false;
 	}
 	
 	@Override
@@ -32,7 +37,12 @@ class MainMenuState
 
 	@Override
 	public
-	void onUpdate (float deltaTime) {	
+	void onUpdate (float deltaTime) {
+		if (! this.init) {
+			
+			this.init = true;
+		}
+		
 		// process user input
         if (Gdx.input.isTouched ()) {
             Vector3 position = this.game.getCamera ().unproject (

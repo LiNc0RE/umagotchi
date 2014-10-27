@@ -45,6 +45,7 @@ class LaunchState
 			this.font = new BitmapFont ();		
 			this.game.getAssetManager ().load ("stall.png", Texture.class);
 			this.game.getAssetManager ().load ("pferd.png", Texture.class);
+			this.game.getAssetManager ().load ("comb2.png", Texture.class);
 			
 			this.ready = true;
 			

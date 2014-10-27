@@ -39,6 +39,30 @@ class EventManager {
 			);
 			listeners.add (listener);			
 		}
+		else {
+			Gdx.app.debug ("EventManager", 
+				"Trying to readd listener " + listener + " for " + type
+			);
+		}
+	}
+	
+	public
+	void unregister (IEventListener listener) {
+		for (Class<? extends IEvent> type : this.listeners.keySet ()) {
+			this.unregister (listener, type);		
+		}
+	}
+	
+	public
+	void unregister (IEventListener listener, Class<? extends IEvent> type) {
+		if (! this.listeners.containsKey (type)) {
+			return;
+		}
+		
+		List<IEventListener> list = this.listeners.get (type);
+		if (list.contains (listener)) {
+			list.remove (listener);
+		}
 	}
 	
 	public

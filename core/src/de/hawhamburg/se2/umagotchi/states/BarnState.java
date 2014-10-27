@@ -38,13 +38,27 @@ class BarnState
         this.game.getCamera ().update ();
         batch.setProjectionMatrix (this.game.getCamera ().combined);
         
-		batch.begin ();
+        batch.begin ();
+        this.renderScene (batch);
+        this.renderToolbar (batch);
+        batch.end ();
+	}
+	
+	private
+	void renderToolbar (SpriteBatch batch) {
+		Texture comb = this.game.getAssetManager ().get ("comb2.png", Texture.class);
+		batch.draw (comb,
+			120, 120
+		);
+	}
+	
+	private
+	void renderScene (SpriteBatch batch) {
 		batch.draw (this.game.getAssetManager ().get ("stall.png", Texture.class),
 			120, 120
 		);
 		batch.draw (this.game.getAssetManager ().get ("pferd.png", Texture.class),
 			220, 280
 		);
-		batch.end ();
 	}
 }

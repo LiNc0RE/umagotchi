@@ -1,5 +1,7 @@
 package de.hawhamburg.se2.umagotchi.states;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,6 +53,7 @@ class StateManager
 	public
 	void onUpdate (float deltaTime) {
 		List<IState> copy = new LinkedList<IState> (this.states);
+		Collections.reverse (copy);
 		for (IState state : copy) {
 			state.onUpdate (deltaTime);
 		}

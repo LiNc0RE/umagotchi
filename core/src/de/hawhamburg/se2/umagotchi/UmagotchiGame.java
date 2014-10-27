@@ -1,5 +1,6 @@
 package de.hawhamburg.se2.umagotchi;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -26,6 +27,8 @@ implements
 	private
 	EventManager eventManager;
 	private
+	InputManager inputManager;
+	private
 	StateManager stateManager;
 	
 	private
@@ -36,11 +39,17 @@ implements
 	@Override
 	public
 	void create () {
+		Gdx.app.setLogLevel (Application.LOG_DEBUG);
+		
 		this.assetManager = new AssetManager ();
 		this.eventManager = new EventManager ();
+		this.inputManager = new InputManager (this.eventManager);
 		this.stateManager = new StateManager (this);
+		
+		// Register the input manager to receive input events
+		Gdx.input.setInputProcessor (this.inputManager);
 
-		// this informs android to use the asset manager
+		// This informs android to use the asset manager
 		// enables us to show a loading screen on resume
 		Texture.setAssetManager (this.assetManager);
 		

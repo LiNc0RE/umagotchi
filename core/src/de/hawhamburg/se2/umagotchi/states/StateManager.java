@@ -43,6 +43,12 @@ class StateManager
 	
 	@Override
 	public
+	void attachTo (UmagotchiGame game) {
+		// do nothing
+	}
+	
+	@Override
+	public
 	void onUpdate (float deltaTime) {
 		List<IState> copy = new LinkedList<IState> (this.states);
 		for (IState state : copy) {

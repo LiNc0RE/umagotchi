@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 import de.hawhamburg.se2.umagotchi.UmagotchiGame;
+import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
 
 public
 class LaunchState
@@ -26,10 +27,15 @@ class LaunchState
 	String precentage;
 	
 	public
-	LaunchState (UmagotchiGame game) {
-		this.game = game;
+	LaunchState () {
 		this.ready = false;
 		this.precentage = "0";
+	}
+	
+	@Override
+	public
+	void attachTo (UmagotchiGame game) {
+		this.game = game;
 	}
 	
 	@Override
@@ -47,8 +53,9 @@ class LaunchState
 		
 		boolean finished = this.game.getAssetManager ().update (); 
 		if (finished) {
-			this.game.getStateManager ().pop ();
-			this.game.getStateManager ().push (new MainMenuState (this.game));
+			this.game.getEventManager ().raise (
+				new RequestStateChangeEvent (MainMenuState.class, true)
+			);
 		}
 		else {
 			this.precentage = String.valueOf (

@@ -15,7 +15,12 @@ class BarnState
 	UmagotchiGame game;
 	
 	public
-	BarnState (UmagotchiGame game) {
+	BarnState () {
+	}
+	
+	@Override
+	public
+	void attachTo (UmagotchiGame game) {
 		this.game = game;
 	}
 	

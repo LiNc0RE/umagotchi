@@ -8,11 +8,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import de.hawhamburg.se2.umagotchi.events.EventManager;
+import de.hawhamburg.se2.umagotchi.events.IEvent;
+import de.hawhamburg.se2.umagotchi.events.IEventListener;
+import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
+import de.hawhamburg.se2.umagotchi.states.IState;
 import de.hawhamburg.se2.umagotchi.states.LaunchState;
 import de.hawhamburg.se2.umagotchi.states.StateManager;
 
 public class UmagotchiGame
-	implements ApplicationListener {
+implements
+	ApplicationListener,
+	IEventListener {
 	
 	private
 	AssetManager assetManager;
@@ -40,12 +47,19 @@ public class UmagotchiGame
 		this.batch = new SpriteBatch ();
 		this.camera = new OrthographicCamera ();
 		
-		this.stateManager.push (new LaunchState (this));
+		this.eventManager.register (this, RequestStateChangeEvent.class);
+		
+		this.eventManager.raise (
+			new RequestStateChangeEvent (LaunchState.class, false)
+		);
 	}
 
 	@Override
 	public
 	void render () {
+		// process all queued events
+		this.eventManager.process ();
+		
 		this.stateManager.onUpdate (Gdx.graphics.getDeltaTime ());
 		this.stateManager.onRender (this.batch);
 	}
@@ -99,6 +113,36 @@ public class UmagotchiGame
 	public
 	OrthographicCamera getCamera () {
 		return this.camera;
+	}
+
+	@Override
+	public
+	boolean handle (IEvent event) {
+		if (event.getClass ().equals (RequestStateChangeEvent.class)) {
+			RequestStateChangeEvent re = (RequestStateChangeEvent) event;
+			
+			if (re.removeTop) {
+				this.stateManager.pop ();
+			}
+			
+			IState newstate;
+			try {
+				newstate = re.stateType.newInstance ();
+				newstate.attachTo (this);
+				this.stateManager.push (newstate);
+			}
+			catch (InstantiationException e) {
+				Gdx.app.error ("UmagotchiGame", "Something didn't add up.");
+				Gdx.app.error ("UmagotchiGame", e.getMessage ());
+				e.printStackTrace();
+			}
+			catch (IllegalAccessException e) {
+				Gdx.app.error ("UmagotchiGame", "Well access has not been granted, i guess.");
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
 	}
 
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 import de.hawhamburg.se2.umagotchi.UmagotchiGame;
+import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
 
 public
 class MainMenuState
@@ -19,9 +20,14 @@ class MainMenuState
 	BitmapFont font;
 	
 	public
-	MainMenuState (UmagotchiGame game) {
-		this.game = game;
+	MainMenuState () {
 		this.font = new BitmapFont ();
+	}
+	
+	@Override
+	public
+	void attachTo (UmagotchiGame game) {
+		this.game = game;
 	}
 
 	@Override
@@ -35,8 +41,10 @@ class MainMenuState
             Gdx.app.debug ("EventManager", 
 				"Received touch at " + position
 			);
-            this.game.getStateManager ().pop ();
-            this.game.getStateManager ().push (new BarnState (this.game));
+            
+            this.game.getEventManager ().raise (
+				new RequestStateChangeEvent (BarnState.class, true)
+			);
         }
 	}
 

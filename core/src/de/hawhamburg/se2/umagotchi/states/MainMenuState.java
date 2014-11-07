@@ -12,10 +12,7 @@ import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
 
 public
 class MainMenuState
-	implements IState {
-	
-	private
-	UmagotchiGame game;
+extends AState {
 	
 	private
 	BitmapFont font;
@@ -24,15 +21,11 @@ class MainMenuState
 	boolean init;
 	
 	public
-	MainMenuState () {
+	MainMenuState (UmagotchiGame game) {
+		super (game);
+
 		this.font = new BitmapFont ();
 		this.init = false;
-	}
-	
-	@Override
-	public
-	void attachTo (UmagotchiGame game) {
-		this.game = game;
 	}
 
 	@Override
@@ -45,14 +38,14 @@ class MainMenuState
 		
 		// process user input
         if (Gdx.input.isTouched ()) {
-            Vector3 position = this.game.getCamera ().unproject (
+            Vector3 position = this.getGame ().getCamera ().unproject (
         		new Vector3 (Gdx.input.getX (), Gdx.input.getY (), 0)
     		);
             Gdx.app.debug ("EventManager", 
 				"Received touch at " + position
 			);
             
-            this.game.getEventManager ().raise (
+            this.getGame ().getEventManager ().raise (
 				new RequestStateChangeEvent (BarnState.class, true)
 			);
         }
@@ -64,8 +57,8 @@ class MainMenuState
 		Gdx.gl.glClearColor (0, 0, 0.2f, 1);
         Gdx.gl.glClear (GL20.GL_COLOR_BUFFER_BIT);
 
-        this.game.getCamera ().update();
-        batch.setProjectionMatrix (this.game.getCamera ().combined);
+        this.getGame ().getCamera ().update();
+        batch.setProjectionMatrix (this.getGame ().getCamera ().combined);
 
         batch.begin ();
         	this.font.draw (batch, "Welcome to Umagotchi!!! ", 100, 150);

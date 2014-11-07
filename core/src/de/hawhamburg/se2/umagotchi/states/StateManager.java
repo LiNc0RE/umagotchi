@@ -11,7 +11,7 @@ import de.hawhamburg.se2.umagotchi.UmagotchiGame;
 
 public
 class StateManager
-	implements IState {
+implements IState {
 	
 	private
 	UmagotchiGame game;
@@ -45,12 +45,6 @@ class StateManager
 	
 	@Override
 	public
-	void attachTo (UmagotchiGame game) {
-		// do nothing
-	}
-	
-	@Override
-	public
 	void onUpdate (float deltaTime) {
 		List<IState> copy = new LinkedList<IState> (this.states);
 		Collections.reverse (copy);
@@ -76,6 +70,18 @@ class StateManager
 		}
 		
 		return false;
+	}
+
+	@Override
+	public
+	void onActivate () {
+		// TODO Auto-generated method stub		
+	}
+
+	@Override
+	public
+	void onDeactivate () {
+		// TODO Auto-generated method stub		
 	}
 
 }

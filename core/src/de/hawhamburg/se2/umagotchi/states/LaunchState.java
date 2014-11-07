@@ -13,10 +13,7 @@ import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
 
 public
 class LaunchState
-	implements IState {
-	
-	private
-	UmagotchiGame game;
+extends AState {
 	
 	private
 	boolean ready;
@@ -28,15 +25,11 @@ class LaunchState
 	String precentage;
 	
 	public
-	LaunchState () {
+	LaunchState (UmagotchiGame game) {
+		super (game);
+
 		this.ready = false;
 		this.precentage = "0";
-	}
-	
-	@Override
-	public
-	void attachTo (UmagotchiGame game) {
-		this.game = game;
 	}
 	
 	@Override
@@ -44,36 +37,36 @@ class LaunchState
 	void onUpdate (float deltaTime) {
 		if (! this.ready) {
 			this.font = new BitmapFont ();
-			this.game.getAssetManager ().load ("stall.png", Texture.class);
-			this.game.getAssetManager ().load ("horse.png", Texture.class);
-			this.game.getAssetManager ().load ("comb2.png", Texture.class);
-			this.game.getAssetManager ().load ("hay.png", Texture.class);
+			this.getGame ().getAssetManager ().load ("stall.png", Texture.class);
+			this.getGame ().getAssetManager ().load ("horse.png", Texture.class);
+			this.getGame ().getAssetManager ().load ("comb2.png", Texture.class);
+			this.getGame ().getAssetManager ().load ("hay.png", Texture.class);
 			
-			this.game.getAssetManager ().load ("neighing-01.mp3", Sound.class);
-			this.game.getAssetManager ().load ("neighing-02.mp3", Sound.class);
-			this.game.getAssetManager ().load ("chewing.mp3", Sound.class);
-			this.game.getAssetManager ().load ("interface-click.mp3", Sound.class);
-			this.game.getAssetManager ().load ("bg-music.mp3", Music.class);
+			this.getGame ().getAssetManager ().load ("neighing-01.mp3", Sound.class);
+			this.getGame ().getAssetManager ().load ("neighing-02.mp3", Sound.class);
+			this.getGame ().getAssetManager ().load ("chewing.mp3", Sound.class);
+			this.getGame ().getAssetManager ().load ("interface-click.mp3", Sound.class);
+			this.getGame ().getAssetManager ().load ("bg-music.mp3", Music.class);
 			
 			this.ready = true;
 			
 			return;
 		}
 		
-		boolean finished = this.game.getAssetManager ().update (); 
+		boolean finished = this.getGame ().getAssetManager ().update (); 
 		if (finished) {
-			Music bg = this.game.getAssetManager ().get ("bg-music.mp3", Music.class);
+			Music bg = this.getGame ().getAssetManager ().get ("bg-music.mp3", Music.class);
 			bg.setLooping (true);
 			bg.setVolume (0.31415f);
 			bg.play ();
 			
-			this.game.getEventManager ().raise (
+			this.getGame ().getEventManager ().raise (
 				new RequestStateChangeEvent (MainMenuState.class, true)
 			);
 		}
 		else {
 			this.precentage = String.valueOf (
-				(int)(this.game.getAssetManager ().getProgress () * 100)
+				(int)(this.getGame ().getAssetManager ().getProgress () * 100)
 			);
 		}
 	}
@@ -84,14 +77,14 @@ class LaunchState
 		Gdx.gl.glClearColor (0, 0, 0.2f, 1);
         Gdx.gl.glClear (GL20.GL_COLOR_BUFFER_BIT);
 
-        this.game.getCamera ().update();
-        batch.setProjectionMatrix (this.game.getCamera ().combined);
+        this.getGame ().getCamera ().update();
+        batch.setProjectionMatrix (this.getGame ().getCamera ().combined);
 
         batch.begin ();
         	this.font.draw (batch, 
     			"Loading: " + precentage + "%",
-    			this.game.getCamera ().viewportWidth / 2,
-    			this.game.getCamera ().viewportHeight / 2
+    			this.getGame ().getCamera ().viewportWidth / 2,
+    			this.getGame ().getCamera ().viewportHeight / 2
 			);
         batch.end ();
 	}

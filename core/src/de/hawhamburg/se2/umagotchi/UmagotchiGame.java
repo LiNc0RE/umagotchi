@@ -15,6 +15,7 @@ import de.hawhamburg.se2.umagotchi.events.IEventListener;
 import de.hawhamburg.se2.umagotchi.events.RequestStateChangeEvent;
 import de.hawhamburg.se2.umagotchi.states.IState;
 import de.hawhamburg.se2.umagotchi.states.LaunchState;
+import de.hawhamburg.se2.umagotchi.states.StateFactory;
 import de.hawhamburg.se2.umagotchi.states.StateManager;
 
 public class UmagotchiGame
@@ -139,17 +140,17 @@ implements
 			
 			IState newstate;
 			try {
-				newstate = re.stateType.newInstance ();
-				newstate.attachTo (this);
+				//newstate = re.stateType.newInstance ();
+				newstate = StateFactory.createFromType (this, re.stateType);
+				if (null == newstate) {
+					throw new InstantiationException ("Type has been " + re.stateType);
+				}
+				
 				this.stateManager.push (newstate);
 			}
 			catch (InstantiationException e) {
 				Gdx.app.error ("UmagotchiGame", "Something didn't add up.");
 				Gdx.app.error ("UmagotchiGame", e.getMessage ());
-				e.printStackTrace();
-			}
-			catch (IllegalAccessException e) {
-				Gdx.app.error ("UmagotchiGame", "Well access has not been granted, i guess.");
 				e.printStackTrace();
 			}
 			finally {

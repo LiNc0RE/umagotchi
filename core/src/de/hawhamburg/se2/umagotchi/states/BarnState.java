@@ -15,18 +15,15 @@ import de.hawhamburg.se2.umagotchi.events.TouchDownEvent;
 
 public
 class BarnState
-implements
-	IState,
-	IEventListener {
-	
-	private
-	UmagotchiGame game;
+extends AState {
 	
 	private
 	Texture menubar;
 	
 	public
-	BarnState () {
+	BarnState (UmagotchiGame game) {
+		super (game);
+		
 		Pixmap pixmap;		
         // A Pixmap is basically a raw image in memory as repesented by pixels
         // We create one 256 wide, 128 height using 8 bytes for Red, Green, Blue and Alpha channels
@@ -41,9 +38,14 @@ implements
 	
 	@Override
 	public
-	void attachTo (UmagotchiGame game) {
-		this.game = game;
-		this.game.getEventManager ().register (this, TouchDownEvent.class);
+	void onActivate () {
+		this.getGame ().getEventManager ().register (this, TouchDownEvent.class);
+	}
+	
+	@Override
+	public
+	void onDeactivate () {
+		this.getGame ().getEventManager ().unregister (this, TouchDownEvent.class);
 	}
 	
 	@Override
@@ -57,8 +59,8 @@ implements
 		Gdx.gl.glClearColor (0, 1, 0.2f, 1);
         Gdx.gl.glClear (GL20.GL_COLOR_BUFFER_BIT);
 
-        this.game.getCamera ().update ();
-        batch.setProjectionMatrix (this.game.getCamera ().combined);
+        this.getGame ().getCamera ().update ();
+        batch.setProjectionMatrix (this.getGame ().getCamera ().combined);
         
 		Vector2 ex = new Vector2 (640, 480);
 		Vector2 vp = new Vector2 (
@@ -73,11 +75,11 @@ implements
         batch.begin ();
         
         // background stuff
-        batch.draw (this.game.getAssetManager ().get ("stall.png", Texture.class), 
+        batch.draw (this.getGame ().getAssetManager ().get ("stall.png", Texture.class), 
 			0, 0, vp.x, vp.y 
 		);
 		
-		Texture horse = this.game.getAssetManager ().get ("horse.png", Texture.class);
+		Texture horse = this.getGame ().getAssetManager ().get ("horse.png", Texture.class);
 		float x = vp.x * 0.15f;
 		float y = vp.y * 0.22f;
 		batch.draw (horse,
@@ -95,7 +97,7 @@ implements
     		this.menubar.getHeight () * scale.y
 		);
         
-		Texture comb = this.game.getAssetManager ().get ("comb2.png", Texture.class);
+		Texture comb = this.getGame ().getAssetManager ().get ("comb2.png", Texture.class);
 		float combs = 0.1f;
 		batch.draw (comb,
 			16 * scale.x,
@@ -104,7 +106,7 @@ implements
 			comb.getHeight () * combs * scale.y
 		);
 		
-		Texture hay = this.game.getAssetManager ().get ("hay.png", Texture.class);
+		Texture hay = this.getGame ().getAssetManager ().get ("hay.png", Texture.class);
 		float hays = 0.7f;
 		batch.draw (hay,
 			128 * scale.x,
@@ -124,7 +126,7 @@ implements
 			TouchDownEvent e = (TouchDownEvent) event;
 			Gdx.app.debug ("BarnState", "Position (" + e.screenX + ":" + e.screenY + ")");
 		
-			Sound click = this.game.getAssetManager ().get ("interface-click.mp3", Sound.class);
+			Sound click = this.getGame ().getAssetManager ().get ("interface-click.mp3", Sound.class);
 			click.play ();
 			
 			return true;

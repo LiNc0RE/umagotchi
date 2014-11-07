@@ -6,9 +6,13 @@ import de.hawhamburg.se2.umagotchi.UmagotchiGame;
 
 public
 interface IState {
-	void attachTo (UmagotchiGame game);
+	
+	void onActivate ();
+	
+	void onDeactivate ();
 	
 	void onUpdate (float deltaTime);
 	
 	void onRender (SpriteBatch batch);
+	
 }

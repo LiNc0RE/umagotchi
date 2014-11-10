@@ -1,5 +1,10 @@
 package de.hawhamburg.se2.umagotchi;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -38,6 +43,11 @@ implements
     OrthographicCamera camera;
 	private
 	StateChangeListener stateChangeListener;
+	
+	private
+	Map<String, Horse> horseMap;
+	private
+	Horse selectedHorse;
     
 	@Override
 	public
@@ -49,6 +59,9 @@ implements
 		this.inputManager = new InputManager (this.eventManager);
 		this.stateManager = new StateManager (this);
 		
+		//
+		this.horseMap = new HashMap<String, Horse> ();
+		this.selectedHorse = null;
 		
 		// Register the input manager to receive input events
 		Gdx.input.setInputProcessor (this.inputManager);
@@ -108,6 +121,33 @@ implements
 	@Override
 	public
 	void resume () {
+	}
+	
+	public
+	void selectHorse (String horseName) {
+		if (! this.horseMap.containsKey (horseName)) {
+			throw new RuntimeException ("No horse named " + horseName);
+		}
+		this.selectedHorse = this.horseMap.get (horseName);
+	}
+	
+	public
+	Horse getSelectedHorse () {
+		return this.selectedHorse;
+	}
+	
+	public
+	List<String> getHorseNames () {
+		return new LinkedList<String> (this.horseMap.keySet ());
+	}
+	
+	public
+	Horse getHorseByName (String horseName) {
+		if (! this.horseMap.containsKey (horseName)) {
+			throw new RuntimeException ("No horse named " + horseName);
+		}
+		
+		return this.horseMap.get (horseName);
 	}
 	
 	public

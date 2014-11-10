@@ -36,6 +36,8 @@ implements
 	SpriteBatch batch;
 	private
     OrthographicCamera camera;
+	private
+	StateChangeListener stateChangeListener;
     
 	@Override
 	public
@@ -47,6 +49,7 @@ implements
 		this.inputManager = new InputManager (this.eventManager);
 		this.stateManager = new StateManager (this);
 		
+		
 		// Register the input manager to receive input events
 		Gdx.input.setInputProcessor (this.inputManager);
 
@@ -56,8 +59,9 @@ implements
 		
 		this.batch = new SpriteBatch ();
 		this.camera = new OrthographicCamera ();
-		
-		this.eventManager.register (this, RequestStateChangeEvent.class);
+
+		this.stateChangeListener = new StateChangeListener (this);
+		this.eventManager.register (this.stateChangeListener, RequestStateChangeEvent.class);
 		
 		this.eventManager.raise (
 			new RequestStateChangeEvent (LaunchState.class, false)
@@ -125,28 +129,36 @@ implements
 	OrthographicCamera getCamera () {
 		return this.camera;
 	}
-
-	@Override
-	public
-	boolean handle (IEvent event) {
-		boolean consumend = false;
-
-		if (event.getClass ().equals (RequestStateChangeEvent.class)) {
+	
+	private static
+	class StateChangeListener
+	implements IEventListener {
+		private
+		UmagotchiGame game;
+		
+		public
+		StateChangeListener (UmagotchiGame game) {
+			this.game = game;
+		}
+		
+		@Override
+		public boolean handle (IEvent event) {
+			boolean consumed = false;
 			RequestStateChangeEvent re = (RequestStateChangeEvent) event;
 			
 			if (re.removeTop) {
-				this.stateManager.pop ();
+				this.game.stateManager.pop ();
 			}
 			
 			IState newstate;
 			try {
 				//newstate = re.stateType.newInstance ();
-				newstate = StateFactory.createFromType (this, re.stateType);
+				newstate = StateFactory.createFromType (this.game, re.stateType);
 				if (null == newstate) {
 					throw new InstantiationException ("Type has been " + re.stateType);
 				}
 				
-				this.stateManager.push (newstate);
+				this.game.stateManager.push (newstate);
 			}
 			catch (InstantiationException e) {
 				Gdx.app.error ("UmagotchiGame", "Something didn't add up.");
@@ -154,9 +166,18 @@ implements
 				e.printStackTrace();
 			}
 			finally {
-				consumend = true;
+				consumed = true;
 			}
+			
+			return consumed;
 		}
+		
+	}
+
+	@Override
+	public
+	boolean handle (IEvent event) {
+		boolean consumend = false;
 		
 		return consumend;
 	}
